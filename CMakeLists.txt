@@ -92,5 +92,5 @@ install(FILES
 
 set(ASMJIT_DIR "${PROJECT_SOURCE_DIR}/asmjit/")              # Location of AsmJit.
 add_subdirectory("${ASMJIT_DIR}")              # Adds AsmJit sub-project to your project.
-set(DASMJIT_BUILD_LIBRARY, 1)
+
 target_link_libraries(muparsersse PRIVATE AsmJit)      # Adds AsmJit as a dependency to app.
