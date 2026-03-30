@@ -4,9 +4,6 @@ project(muparsersse
         DESCRIPTION "muparsersse with cmake" VERSION 1.0.0
 )
 set(namespace mpsse)
-set(BUILD_SHARED_LIBS OFF)
-set(CMAKE_EXE_LINKER_FLAGS "-static")
-set(CMAKE_FIND_LIBRARY_SUFFIXES ".a")
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
