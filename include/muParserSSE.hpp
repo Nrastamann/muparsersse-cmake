@@ -22,8 +22,6 @@
   DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, 
   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. 
 */
-#ifndef MEC_PARSER_DLL_H
-#define MEC_PARSER_DLL_H
 
 #if defined(WIN32) || defined(_WIN32)
 #ifdef MUPARSERLIB_EXPORTS
@@ -312,5 +310,3 @@ API_EXPORT(void) mecReleaseVar(mecFloat_t *);
 #ifdef __cplusplus
 }
 #endif
-
-#endif // include guard

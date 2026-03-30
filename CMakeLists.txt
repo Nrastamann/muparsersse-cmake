@@ -11,7 +11,6 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 #set(CMAKE_CXX_COMPILER "/usr/bin/g++")
 #set(CMAKE_C_COMPILER "/usr/bin/gcc")
 
-set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_DEBUG_POSTFIX d)
 add_library(muparsersse)
 add_library(${namespace}::muparsersse ALIAS muparsersse)
@@ -23,7 +22,6 @@ set_target_properties(muparsersse
 set_target_properties(muparsersse PROPERTIES CXX_VISIBILITY_PRESET "hidden"
                                          VISIBILITY_INLINES_HIDDEN TRUE)
 
-target_compile_features(muparsersse PUBLIC cxx_std_11)
 
 set(SRCS 
 src/AssemblerX86X64.cpp  src/LoggerX86X64.cpp      src/mecParser.cpp                 src/muParserSSE.cpp
