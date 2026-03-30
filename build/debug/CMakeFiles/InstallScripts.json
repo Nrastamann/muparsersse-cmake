@@ -1,0 +1,8 @@
+{
+	"InstallScripts" : 
+	[
+		"/home/nrastamann/repos/muparsersse-cmake/build/debug/cmake_install.cmake",
+		"/home/nrastamann/repos/muparsersse-cmake/build/debug/asmjit/cmake_install.cmake"
+	],
+	"Parallel" : false
+}

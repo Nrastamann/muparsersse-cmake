@@ -1,0 +1,27 @@
+# ninja log v7
+1	513	1774878026552868579	CMakeFiles/muparsersse.dir/src/mecCallback.cpp.o	739bb62f66e1cf3a
+2	579	1774878026555002995	CMakeFiles/muparsersse.dir/src/mecToken.cpp.o	3a5955a33de5b88e
+6	1339	1774878026557868579	CMakeFiles/muparsersse.dir/src/mecError.cpp.o	b0efdb8d9473b6c
+579	1551	1774878027130868568	CMakeFiles/muparsersse.dir/src/mecReversePolishNotation.cpp.o	25fa62fbb3f3213
+2	2319	1774878026554691333	CMakeFiles/muparsersse.dir/src/mecParser.cpp.o	7dee8d4f7ea6ed27
+513	2624	1774878027066109006	CMakeFiles/muparsersse.dir/src/mecParserBase.cpp.o	170ac888760b7bae
+2	2918	1774878026555227876	CMakeFiles/muparsersse.dir/src/mecUnitTest.cpp.o	1e7e7b134d383e34
+1339	3149	1774878027890868552	CMakeFiles/muparsersse.dir/src/mecTokenReader.cpp.o	7d003fb39882af31
+1	61	1774878042348946340	build.ninja	e424f23e356fe4f3
+1	61	1774878042348946340	/home/nrastamann/repos/muparsersse-cmake/build/debug/cmake_install.cmake	e424f23e356fe4f3
+1	61	1774878042348946340	/home/nrastamann/repos/muparsersse-cmake/build/debug/asmjit/cmake_install.cmake	e424f23e356fe4f3
+2	1046	1774878042360868260	CMakeFiles/muparsersse.dir/src/mecCallback.cpp.o	42c900923f298e68
+10	1366	1774878042368868259	CMakeFiles/muparsersse.dir/src/mecError.cpp.o	762e63f8ec499d2c
+3	1546	1774878042362744724	CMakeFiles/muparsersse.dir/src/mecToken.cpp.o	3743b3fcb1ba57a1
+2	2701	1774878042362409042	CMakeFiles/muparsersse.dir/src/mecParser.cpp.o	fd2f476d6cae1896
+1366	3400	1774878043724868232	CMakeFiles/muparsersse.dir/src/mecReversePolishNotation.cpp.o	7244089ff80d59c3
+5	4397	1774878042363868260	CMakeFiles/muparsersse.dir/src/mecUnitTest.cpp.o	ad92065f8ada3cb3
+1547	4625	1774878043905868228	CMakeFiles/muparsersse.dir/src/mecTokenReader.cpp.o	83846bb73486457c
+1046	4841	1774878043404868239	CMakeFiles/muparsersse.dir/src/mecParserBase.cpp.o	627fbfafe0493f7c
+2	2767	1774878300654383690	CMakeFiles/muparsersse.dir/src/mecParser.cpp.o	fd2f476d6cae1896
+7	3045	1774878300658848444	CMakeFiles/muparsersse.dir/src/muParserSSE.cpp.o	b2a0f9a84d392ce8
+3	3145	1774878300654648012	CMakeFiles/muparsersse.dir/src/mecUnitTest.cpp.o	ad92065f8ada3cb3
+7	3319	1774878300657863035	CMakeFiles/muparsersse.dir/src/mecTokenReader.cpp.o	83846bb73486457c
+3	3458	1774878300654868273	CMakeFiles/muparsersse.dir/src/mecParserBase.cpp.o	627fbfafe0493f7c
+2	1053	1774878357429861887	CMakeFiles/muparsersse.dir/src/mecExprCompiler.cpp.o	5b7a77405d4866c1
+1053	1108	1774878358480861866	libmuparsersse.a	214ed8c9c9fc9ebb
