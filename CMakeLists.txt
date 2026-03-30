@@ -96,3 +96,18 @@ install(
         NAMESPACE mpsse::
     DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/cmake/muparsersse
 )
+
+# Define variables for the pkg-config file
+set(PACKAGE_NAME muparsersse)
+if(ENABLE_WIDE_CHAR)
+  set(PKG_CONFIG_FLAGS "-D_UNICODE")
+endif(ENABLE_WIDE_CHAR)
+configure_file(
+    muparsersse.pc.in
+    ${CMAKE_BINARY_DIR}/muparsersse.pc
+    @ONLY
+)
+install(
+    FILES ${CMAKE_BINARY_DIR}/muparsersse.pc
+    DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig
+)
