@@ -23,10 +23,6 @@
     DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
-#if defined(_WIN32)
-#define WIN32_LEAN_AND_MEAN
-#include <windows.h>
-#endif
 
 #include "muParserSSE.hpp"
 
@@ -160,45 +156,6 @@ ParserTag *AsParserTag(mecParserHandle_t a_hParser)
 	return static_cast<ParserTag *>(a_hParser);
 }
 
-//---------------------------------------------------------------------------
-#if defined(_WIN32)
-#define _CRT_SECURE_NO_DEPRECATE
-
-BOOL APIENTRY DllMain(HANDLE /*hModule*/, DWORD ul_reason_for_call,
-		      LPVOID /*lpReserved*/)
-{
-	switch (ul_reason_for_call) {
-	case DLL_PROCESS_ATTACH:
-		break;
-
-	case DLL_THREAD_ATTACH:
-	case DLL_THREAD_DETACH:
-	case DLL_PROCESS_DETACH:
-		break;
-	}
-
-	return TRUE;
-}
-
-#endif
-
-//---------------------------------------------------------------------------
-//
-//
-//  exported functions
-//
-//
-//---------------------------------------------------------------------------
-
-//API_EXPORT(void) mecSetVarFactory(mecParserHandle_t a_hParser, mecFacFun_t a_pFactory, void *pUserData)
-//{
-//  MU_TRY
-//    mecParser_t* p(AsParser(a_hParser));
-//    p->SetVarFactory(a_pFactory, pUserData);
-//  MU_CATCH
-//}
-
-//---------------------------------------------------------------------------
 API_EXPORT(void) mecSelfTest()
 {
 	mec::Test::UnitTest pt;

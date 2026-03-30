@@ -23,19 +23,8 @@
   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. 
 */
 #pragma once
-#if defined(WIN32) || defined(_WIN32)
-#ifdef MUPARSERLIB_EXPORTS
-#define API_EXPORT(TYPE) __declspec(dllexport) TYPE __cdecl
-#else
-#define API_EXPORT(TYPE) __declspec(dllimport) TYPE __cdecl
-#endif
-#else
-#define API_EXPORT(TYPE) TYPE
-#endif
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+#define API_EXPORT(TYPE) TYPE
 
 /** \file 
     \brief This file contains the DLL interface of muparser.
@@ -306,7 +295,3 @@ API_EXPORT(const mecChar_t *) mecGetErrorToken(mecParserHandle_t a_hParser);
 // manage the variable rather than the .NET garbage collector.
 API_EXPORT(mecFloat_t *) mecCreateVar();
 API_EXPORT(void) mecReleaseVar(mecFloat_t *);
-
-#ifdef __cplusplus
-}
-#endif
