@@ -26,8 +26,12 @@ set_target_properties(muparsersse PROPERTIES CXX_VISIBILITY_PRESET "hidden"
 target_compile_features(muparsersse PUBLIC cxx_std_11)
 
 set(SRCS 
-src/mecCallback.cpp src/mecExprCompiler.cpp src/mecParser.cpp src/mecToken.cpp src/mecUnitTest.cpp 
-src/mecError.cpp src/mecParserBase.cpp src/mecReversePolishNotation.cpp src/mecTokenReader.cpp src/muParserSSE.cpp  
+src/AssemblerX86X64.cpp  src/LoggerX86X64.cpp      src/mecParser.cpp                 src/muParserSSE.cpp
+src/CompilerX86X64.cpp   src/LoggerX86X64Dump.cpp  src/mecReversePolishNotation.cpp  src/SerializerX86X64.cpp
+src/CpuInfo.cpp          src/mecCallback.cpp       src/mecToken.cpp                  src/Util.cpp
+src/Defs.cpp             src/mecError.cpp          src/mecTokenReader.cpp            src/VirtualMemory.cpp
+src/Lock.cpp             src/mecExprCompiler.cpp   src/mecUnitTest.cpp
+src/Logger.cpp           src/mecParserBase.cpp     src/MemoryManager.cpp  
 )
 
 target_compile_options(muparsersse PRIVATE
@@ -94,8 +98,3 @@ install(
         NAMESPACE mpsse::
     DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/cmake/muparsersse
 )
-
-#======================================================
-list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/asmjit")
-
-target_link_libraries(muparsersse AsmJit)

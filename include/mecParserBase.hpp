@@ -35,10 +35,10 @@
 #undef realloc
 
 //--- ASMJit compiler---------------------------------------------------------------------
-#include "../asmjit/AsmJit/Assembler.h"
-#include "../asmjit/AsmJit/Compiler.h"
-#include "../asmjit/AsmJit/MemoryManager.h"
-#include "../asmjit/AsmJit/Logger.h"
+#include "Assembler.h"
+#include "Compiler.h"
+#include "MemoryManager.h"
+#include "Logger.h"
 //--- Parser includes --------------------------------------------------------------------------
 #include "mecDef.hpp"
 #include "mecStack.hpp"

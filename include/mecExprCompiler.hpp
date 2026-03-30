@@ -30,10 +30,10 @@
 #include <list>
 
 //--- ASMJit compiler---------------------------------------------------------------------
-#include "../asmjit/AsmJit/Assembler.h"
-#include "../asmjit/AsmJit/Compiler.h"
-#include "../asmjit/AsmJit/MemoryManager.h"
-#include "../asmjit/AsmJit/Logger.h"
+#include "Assembler.h"
+#include "Compiler.h"
+#include "MemoryManager.h"
+#include "Logger.h"
 //--- muParser framework --------------------------------------------------------------
 #include "mecDef.hpp"
 #include "mecReversePolishNotation.hpp"
