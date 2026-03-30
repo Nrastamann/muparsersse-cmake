@@ -82,7 +82,7 @@ write_basic_package_version_file(
     COMPATIBILITY SameMajorVersion)
 
 configure_package_config_file(
-        "${CMAKE_CURRENT_LIST_DIR}/cmake/muParserSSE.cmake.in"
+        "${CMAKE_CURRENT_LIST_DIR}/cmake/muParserSSEConfig.cmake.in"
     "${CMAKE_CURRENT_BINARY_DIR}/muParserSSEConfig.cmake"
     INSTALL_DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/cmake/muparsersse
 )
@@ -98,5 +98,4 @@ install(
 #======================================================
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/asmjit")
 
-add_dependencies(muparsersse AsmJit)      # Adds AsmJit as a dependency to app.
 target_link_libraries(muparsersse AsmJit)
