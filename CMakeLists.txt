@@ -3,6 +3,7 @@ CMake_Minimum_Required(VERSION 2.5...3.5)
 project(muparsersse
         DESCRIPTION "muparsersse with cmake" VERSION 1.0.0
 )
+
 set(namespace mpsse)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
@@ -13,6 +14,9 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_CXX_STANDARD 11)
 
 add_library(muparsersse)
+add_subdirectory(asmjit)
+
+add_dependencies(muparsersse AsmJit)      # Adds AsmJit as a dependency to app.
 
 set(SRCS 
 src/mecCallback.cpp src/mecExprCompiler.cpp src/mecParser.cpp src/mecToken.cpp src/mecUnitTest.cpp 
@@ -90,7 +94,3 @@ install(FILES
     DESTINATION cmake
 )
 
-set(ASMJIT_DIR "${PROJECT_SOURCE_DIR}/asmjit/")              # Location of AsmJit.
-add_subdirectory("${ASMJIT_DIR}")              # Adds AsmJit sub-project to your project.
-
-target_link_libraries(muparsersse PRIVATE AsmJit)      # Adds AsmJit as a dependency to app.

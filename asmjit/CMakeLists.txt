@@ -8,7 +8,6 @@ Project(AsmJit C CXX)
 If(NOT ASMJIT_DIR)
   Set(ASMJIT_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 EndIf(NOT ASMJIT_DIR)
-
 # AsmJit C++ sources
 Set(ASMJIT_SOURCES
   AsmJit/AssemblerX86X64.cpp

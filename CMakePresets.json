@@ -17,7 +17,9 @@
                             "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
                             "BENCHMARK_ENABLE_ASSEMBLY_TESTS": "OFF",
                             "BENCHMARK_ENABLE_GTEST_TESTS": "OFF",
-                            "BENCHMARK_ENABLE_TESTING": "OFF"
+                            "BENCHMARK_ENABLE_TESTING": "OFF",
+                            "ASMJIT_BUILD_LIBRARY": "ON",
+                            "DASMJIT_BUILD_LIBRARY": "1"
                      }
               },
               {
