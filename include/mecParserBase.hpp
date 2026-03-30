@@ -232,10 +232,6 @@ class ParserBase {
 	value_type ParseCmdCode();
 	value_type ParseJIT();
 
-#if !defined(NO_MICROSOFT_STYLE_INLINE_ASSEMBLY)
-	value_type ParseCmdCodeASM();
-#endif
-
 	void SwitchEngine();
 
 	void ClearFormula();

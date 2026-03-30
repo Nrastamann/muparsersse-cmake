@@ -1437,12 +1437,6 @@ void ParserBase::SwitchEngine()
 		m_pParseFormula = &ParserBase::ParseCmdCode;
 		break;
 
-#if !defined(NO_MICROSOFT_STYLE_INLINE_ASSEMBLY)
-	case peBYTECODE_ASM:
-		m_pParseFormula = &ParserBase::ParseCmdCodeASM;
-		break;
-#endif
-
 	case peJIT:
 		m_compiler.Bind(m_vByteCode.GetRPNBasePtr());
 		m_pCompiledFun = m_compiler.Compile(5);
