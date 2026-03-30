@@ -12,11 +12,18 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 #set(CMAKE_C_COMPILER "/usr/bin/gcc")
 
 set(CMAKE_CXX_STANDARD 11)
-
+set(CMAKE_DEBUG_POSTFIX d)
 add_library(muparsersse)
-add_subdirectory(asmjit)
+add_library(${namespace}::muparsersse ALIAS muparsersse)
 
-add_dependencies(muparsersse AsmJit)      # Adds AsmJit as a dependency to app.
+set_target_properties(muparsersse 
+        PROPERTIES VERSION ${PROJECT_VERSION} 
+        SOVERSION ${PROJECT_VERSION_MAJOR})
+
+set_target_properties(muparsersse PROPERTIES CXX_VISIBILITY_PRESET "hidden"
+                                         VISIBILITY_INLINES_HIDDEN TRUE)
+
+target_compile_features(muparsersse PUBLIC cxx_std_11)
 
 set(SRCS 
 src/mecCallback.cpp src/mecExprCompiler.cpp src/mecParser.cpp src/mecToken.cpp src/mecUnitTest.cpp 
@@ -26,71 +33,70 @@ src/mecError.cpp src/mecParserBase.cpp src/mecReversePolishNotation.cpp src/mecT
 target_compile_options(muparsersse PRIVATE
         -w -fdeclspec -fms-extensions)
 
+
 target_sources(muparsersse
         PRIVATE ${SRCS}
         PRIVATE
                 FILE_SET HEADERS
                 BASE_DIRS include
 )
-
-include(FetchContent)
-
-if(DEFINED CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
-    message(
-        STATUS
-        "CMAKE_INSTALL_PREFIX is not set\n"
-        "Default value: ${CMAKE_INSTALL_PREFIX}\n"
-        "Will set it to ${CMAKE_SOURCE_DIR}/install"
-    )
-    set(CMAKE_INSTALL_PREFIX
-        "${CMAKE_SOURCE_DIR}/install"
-        CACHE PATH "Where the library will be installed to" FORCE
-    )
-else()
-    message(
-        STATUS
-        "CMAKE_INSTALL_PREFIX was already set\n"
-        "Current value: ${CMAKE_INSTALL_PREFIX}"
-    )
-endif()
-
-set(public_headers
-    include/muParserSSE.hpp
-)
-# note that ${public_headers} has to be in quotes
-set_target_properties(${PROJECT_NAME} PROPERTIES PUBLIC_HEADER "${public_headers}")
-
-include(GNUInstallDirs)
-
-install(TARGETS ${PROJECT_NAME}
-    EXPORT "${PROJECT_NAME}Targets"
-    PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME} 
-    INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+target_include_directories(muparsersse PRIVATE src 
+        PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+        $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}}>
 )
 
-install(EXPORT "${PROJECT_NAME}Targets"
-    FILE "${PROJECT_NAME}Targets.cmake"
-    NAMESPACE ${namespace}::
-    DESTINATION cmake
+include(GenerateExportHeader)
+
+generate_export_header(
+    muparsersse 
+    EXPORT_FILE_NAME
+    export/muparsersse/muParserSSE.hpp
+)
+
+target_include_directories(muparsersse PRIVATE src 
+        PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/export>
+        $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}}>
+)
+
+install(
+        TARGETS muparsersse
+        EXPORT muparsersseTargets
+        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+        ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+        RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+        INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+)
+
+install(DIRECTORY include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+
+install(
+        FILES "${CMAKE_CURRENT_BINARY_DIR}/export/muparsersse/muParserSSE.hpp"
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/muparsersse
 )
 
 include(CMakePackageConfigHelpers)
 
-# generate the version file for the config file
 write_basic_package_version_file(
-    "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake"
-    VERSION "${version}"
-    COMPATIBILITY AnyNewerVersion
-)
-# create config file
-configure_package_config_file(${CMAKE_CURRENT_SOURCE_DIR}/Config.cmake.in
-    "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake"
-    INSTALL_DESTINATION cmake
-)
-# install config files
-install(FILES
-    "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake"
-    "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake"
-    DESTINATION cmake
+        "muParserSSEConfigVersion.cmake"
+    VERSION ${PROJECT_VERSION}
+    COMPATIBILITY SameMajorVersion)
+
+configure_package_config_file(
+        "${CMAKE_CURRENT_LIST_DIR}/cmake/muParserSSE.cmake.in"
+    "${CMAKE_CURRENT_BINARY_DIR}/muParserSSEConfig.cmake"
+    INSTALL_DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/cmake/muparsersse
 )
 
+# install the CMake targets
+install(
+        EXPORT muparsersseTargets
+        FILE muparsersseTargets.cmake
+        NAMESPACE mpsse::
+    DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/cmake/muparsersse
+)
+
+#======================================================
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/asmjit")
+
+add_dependencies(muparsersse AsmJit)      # Adds AsmJit as a dependency to app.
+target_link_libraries(muparsersse AsmJit)
