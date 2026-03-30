@@ -19,10 +19,6 @@ set_target_properties(muparsersse
         PROPERTIES VERSION ${PROJECT_VERSION} 
         SOVERSION ${PROJECT_VERSION_MAJOR})
 
-set_target_properties(muparsersse PROPERTIES CXX_VISIBILITY_PRESET "hidden"
-                                         VISIBILITY_INLINES_HIDDEN TRUE)
-
-
 set(SRCS 
 src/AssemblerX86X64.cpp  src/LoggerX86X64.cpp      src/mecParser.cpp                 src/muParserSSE.cpp
 src/CompilerX86X64.cpp   src/LoggerX86X64Dump.cpp  src/mecReversePolishNotation.cpp  src/SerializerX86X64.cpp
