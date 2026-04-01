@@ -27,9 +27,13 @@
   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. 
 */
 #include <cassert>
+#include <string>
+#include <stack>
+#include <vector>
 #include <memory>
 
-#include "mecCallback.hpp"
+#include "mecError.h"
+#include "mecCallback.h"
 
 /** \file
     \brief This file contains the parser token definition.
@@ -37,42 +41,47 @@
 
 namespace mec
 {
-struct SCallback {
-	index_type m_nArgc;
-	union {
-		void *m_pFun;
-		fun_type0 m_pFun0;
-		fun_type1 m_pFun1;
-		fun_type2 m_pFun2;
-		fun_type3 m_pFun3;
-		fun_type4 m_pFun4;
-		fun_type5 m_pFun5;
-		fun_type6 m_pFun6;
-		fun_type7 m_pFun7;
-		fun_type8 m_pFun8;
-		fun_type9 m_pFun9;
-		fun_type10 m_pFun10;
-	};
-};
-struct SJump {
-	index_type offset;
-};
-#pragma pack(push, 1)
-struct SPackedToken {
-	index_type m_nStackPos;
-	index_type m_eCode;
+  #pragma pack(push, 1) 
+  struct SPackedToken
+  {
+    index_type  m_nStackPos;
+    index_type  m_eCode;
+    
+    union
+    {
+      value_type  m_fVal;
+      value_type *m_pVar;
+      
+      struct SCallback
+      {
+        index_type m_nArgc;
+        union
+        {
+          void       *m_pFun;
+          fun_type0   m_pFun0;
+          fun_type1   m_pFun1;
+          fun_type2   m_pFun2;
+          fun_type3   m_pFun3;
+          fun_type4   m_pFun4;
+          fun_type5   m_pFun5;
+          fun_type6   m_pFun6;
+          fun_type7   m_pFun7;
+          fun_type8   m_pFun8;
+          fun_type9   m_pFun9;
+          fun_type10  m_pFun10;
+        };
+      } Fun; // Union SCallback
 
-	union {
-		value_type m_fVal;
-		value_type *m_pVar;
+      struct SJump
+      {
+        index_type offset;
+      } Jmp;
+    }; // anonymous union
+  }; // struct SToken
+  #pragma pack(pop)
 
-		struct SCallback Fun; // Union SCallback
-		struct SJump Jmp;
-	};
-};
-#pragma pack(pop)
 
-/** \brief Encapsulation of the data for a single formula token. 
+  /** \brief Encapsulation of the data for a single formula token. 
 
     Formula token implementation. Part of the Math Parser Package.
     Formula tokens can be either one of the following:
@@ -88,42 +97,43 @@ struct SPackedToken {
 
    \author (C) 2011 Ingo Berg 
   */
-class Token {
-    private:
-	ECmdCode m_eCode; ///< Type of the token; The token type is a constant of type #ECmdCode.
+  class Token
+  {
+  private:
 
-	value_type *m_pVar; ///< Stores variable pointers
-	value_type m_fVal; ///< Stores values directly
+      ECmdCode    m_eCode;    ///< Type of the token; The token type is a constant of type #ECmdCode.
 
-	int m_iFlags; ///< Additional flags for the token.
-	std::auto_ptr<Callback> m_pCallback;
-	string_type m_sTok; ///< Token string
+      value_type *m_pVar;     ///< Stores variable pointers
+      value_type  m_fVal;     ///< Stores values directly
 
-    public:
-	Token();
-	Token(const Token &a_Tok);
-	Token &operator=(const Token &a_Tok);
+      int  m_iFlags;          ///< Additional flags for the token.
+      std::auto_ptr<Callback> m_pCallback;
+      string_type m_sTok;   ///< Token string
 
-	void Assign(const Token &a_Tok);
-	void AddFlags(int a_iFlags);
-	bool IsFlagSet(int a_iFlags) const;
+  public:
 
-	Token &Set(ECmdCode eCode, const string_type &a_strTok = string_type());
-	Token &Set(ECmdCode eCode, const Callback &a_pCallback,
-		   const string_type &a_sTok);
-	Token &SetVal(value_type a_fVal,
-		      const string_type &a_strTok = string_type());
-	Token &SetVar(value_type *a_pVar, const string_type &a_strTok);
+      Token();
+      Token(const Token &a_Tok);
+      Token& operator=(const Token &a_Tok);
 
-	int GetArgCount() const;
-	bool IsFunction() const;
+      void Assign(const Token &a_Tok);
+      void AddFlags(int a_iFlags);
+      bool IsFlagSet(int a_iFlags) const;
 
-	ECmdCode GetCode() const;
-	Callback *GetCallback() const;
-	value_type GetVal() const;
-	value_type *GetVar() const;
-	const string_type &GetAsString() const;
-};
+      Token& Set(ECmdCode eCode, const string_type &a_strTok=string_type());
+      Token& Set(ECmdCode eCode, const Callback &a_pCallback, const string_type &a_sTok);
+      Token& SetVal(value_type  a_fVal, const string_type &a_strTok=string_type());
+      Token& SetVar(value_type *a_pVar, const string_type &a_strTok);
+
+      int GetArgCount() const;
+      bool IsFunction() const;
+
+      ECmdCode  GetCode() const;
+      Callback* GetCallback() const;
+      value_type  GetVal() const;
+      value_type* GetVar() const;
+      const string_type& GetAsString() const;
+  };
 } // namespace mec
 
 #endif

@@ -27,7 +27,7 @@
 #ifndef MEC_CALLBACK_H
 #define MEC_CALLBACK_H
 
-#include "mecDef.hpp"
+#include "mecDef.h"
 
 /** \file
     \brief Definition of the parser callback class.
@@ -35,45 +35,46 @@
 
 namespace mec
 {
-/** \brief Encapsulates data of a parser callback.
+  /** \brief Encapsulates data of a parser callback.
   */
-struct Callback {
-	Callback(fun_type0 a_pFun, int a_nFlags = 0);
-	Callback(fun_type1 a_pFun, int a_nPrec = -1, int flags = 0);
-	Callback(fun_type2 a_pFun, int a_nPrec,
-		 EOprtAssociativity a_eAssociativity, int a_nFlags = 0);
-	Callback(fun_type2 a_pFun, int a_nFlags = 0);
-	Callback(fun_type3 a_pFun, int a_nFlags = 0);
-	Callback(fun_type4 a_pFun, int a_nFlags = 0);
-	Callback(fun_type5 a_pFun, int a_nFlags = 0);
-	Callback(fun_type6 a_pFun, int a_nFlags = 0);
-	Callback(fun_type7 a_pFun, int a_nFlags = 0);
-	Callback(fun_type8 a_pFun, int a_nFlags = 0);
-	Callback(fun_type9 a_pFun, int a_nFlags = 0);
-	Callback(fun_type10 a_pFun, int a_nFlags = 0);
-	Callback();
+  struct Callback
+  {
+    Callback(fun_type0 a_pFun, int a_nFlags = 0);
+    Callback(fun_type1 a_pFun, int a_nPrec = -1, int flags = 0);
+    Callback(fun_type2 a_pFun, int a_nPrec, EOprtAssociativity a_eAssociativity, int a_nFlags = 0);
+    Callback(fun_type2 a_pFun, int a_nFlags = 0);
+    Callback(fun_type3 a_pFun, int a_nFlags = 0);
+    Callback(fun_type4 a_pFun, int a_nFlags = 0);
+    Callback(fun_type5 a_pFun, int a_nFlags = 0);
+    Callback(fun_type6 a_pFun, int a_nFlags = 0);
+    Callback(fun_type7 a_pFun, int a_nFlags = 0);
+    Callback(fun_type8 a_pFun, int a_nFlags = 0);
+    Callback(fun_type9 a_pFun, int a_nFlags = 0);
+    Callback(fun_type10 a_pFun, int a_nFlags = 0);
+    Callback();
 
-	union {
-		void *m_pFun;
-		fun_type0 m_pFun0;
-		fun_type1 m_pFun1;
-		fun_type2 m_pFun2;
-		fun_type3 m_pFun3;
-		fun_type4 m_pFun4;
-		fun_type5 m_pFun5;
-	};
+    union
+    {
+      void      *m_pFun;
+      fun_type0  m_pFun0;
+      fun_type1  m_pFun1;
+      fun_type2  m_pFun2;
+      fun_type3  m_pFun3;
+      fun_type4  m_pFun4;
+      fun_type5  m_pFun5;
+    };
 
-	int m_nArgc; ///< Number of function arguments
-	int m_nPrec; ///< Valid only for binary and infix operators; Operator precedence.
-	int m_nFlags; ///< Reserved for future use
-	EOprtAssociativity
-		m_eOprtAsct; ///< Operator associativity; Valid only for binary operators
-};
+    int   m_nArgc;                  ///< Number of function arguments   
+    int   m_nPrec;                  ///< Valid only for binary and infix operators; Operator precedence.
+    int   m_nFlags;                 ///< Reserved for future use
+    EOprtAssociativity m_eOprtAsct; ///< Operator associativity; Valid only for binary operators 
+  };
 
 //------------------------------------------------------------------------------
 /** \brief Container for Callback objects. */
-typedef std::map<string_type, Callback> funmap_type;
+typedef std::map<string_type, Callback> funmap_type; 
 
 } // namespace mec
 
 #endif
+

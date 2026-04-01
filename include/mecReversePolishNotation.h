@@ -31,17 +31,18 @@
 #include <stack>
 #include <vector>
 
-#include "mecDef.hpp"
-#include "mecError.hpp"
-#include "mecToken.hpp"
+#include "mecDef.h"
+#include "mecError.h"
+#include "mecToken.h"
 
 /** \file
     \brief This file contains the definition of the parsere reverse polish notation implementation.
 */
 
+
 namespace mec
 {
-/** \brief Bytecode implementation of the Math Parser.
+  /** \brief Bytecode implementation of the Math Parser.
       \author (C) 2011 Ingo Berg 
 
     The bytecode contains the formula converted to revers polish notation stored in a continious
@@ -49,40 +50,44 @@ namespace mec
     values and function pointers. Those are necessary in order to calculate the result.
     All those data items will be casted to the underlying datatype of the bytecode.
   */
-class ReversePolishNotation {
-    private:
-	typedef std::vector<SPackedToken> rpn_type;
+  class ReversePolishNotation
+  {
+  private:
 
-	/** \brief Position in the Calculation array. */
-	unsigned m_iStackPos;
+      typedef std::vector<SPackedToken> rpn_type;
 
-	/** \brief Maximum size needed for the stack. */
-	std::size_t m_iMaxStackSize;
+      /** \brief Position in the Calculation array. */
+      unsigned m_iStackPos;
 
-	/** \brief A vector of packed tokens representing the RPN. */
-	rpn_type m_vRPN;
+      /** \brief Maximum size needed for the stack. */
+      std::size_t m_iMaxStackSize;
 
-    public:
-	ReversePolishNotation();
-	ReversePolishNotation(const ReversePolishNotation &a_RPN);
-	ReversePolishNotation &operator=(const ReversePolishNotation &a_RPN);
-	void Assign(const ReversePolishNotation &a_RPN);
+      /** \brief A vector of packed tokens representing the RPN. */
+      rpn_type m_vRPN;
 
-	void AddVar(value_type *a_pVar);
-	void AddVal(value_type a_fVal);
-	void AddOp(ECmdCode a_Oprt);
-	void AddFun(void *a_pFun, int a_iArgc);
-	void AddFun(ECmdCode a_Oprt);
-	void AddIfElse(ECmdCode a_Oprt);
+  public:
 
-	void Finalize();
-	void clear();
-	std::size_t GetMaxStackSize() const;
-	SPackedToken *GetRPNBasePtr();
+      ReversePolishNotation();
+      ReversePolishNotation(const ReversePolishNotation &a_RPN);
+      ReversePolishNotation& operator=(const ReversePolishNotation &a_RPN);
+      void Assign(const ReversePolishNotation &a_RPN);
 
-	void RemoveValEntries(unsigned a_iNumber);
-	void AsciiDump();
-};
+      void AddVar(value_type *a_pVar);
+      void AddVal(value_type a_fVal);
+      void AddOp(ECmdCode a_Oprt);
+      void AddFun(void *a_pFun, int a_iArgc);
+      void AddFun(ECmdCode a_Oprt);
+      void AddIfElse(ECmdCode a_Oprt);
+
+      void Finalize();
+      void clear();
+      std::size_t GetMaxStackSize() const;
+      SPackedToken* GetRPNBasePtr();
+
+      void RemoveValEntries(unsigned a_iNumber);
+      void AsciiDump();
+  };
 } // namespace mec
 
 #endif
+

@@ -22,66 +22,68 @@
   DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, 
   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. 
 */
-#pragma once
+#ifndef MEC_PARSER_DLL_H
+#define MEC_PARSER_DLL_H
 
-#define API_EXPORT(TYPE) TYPE
+#if defined(WIN32) || defined(_WIN32)
+    #ifdef MUPARSERLIB_EXPORTS
+        #define API_EXPORT(TYPE) __declspec(dllexport) TYPE __cdecl
+    #else
+        #define API_EXPORT(TYPE) __declspec(dllimport) TYPE __cdecl
+    #endif
+#else
+    #define API_EXPORT(TYPE) TYPE
+#endif
+
+#ifdef __cplusplus
+extern "C"
+{
+#endif
 
 /** \file 
     \brief This file contains the DLL interface of muparser.
 */
 
 // Basic types
-typedef void *mecParserHandle_t; // parser handle
+typedef void*  mecParserHandle_t;    // parser handle
 
 #ifdef _UNICODE
-typedef wchar_t mecChar_t; // character type
+    typedef wchar_t   mecChar_t;         // character type
 
-#if !defined(_T)
-#define _T(x) L##x
-#endif // not defined _T
+   #if !defined(_T)
+     #define _T(x) L##x
+   #endif // not defined _T
 #else
-typedef char mecChar_t; // character type
+  typedef char   mecChar_t;            // character type
 
-#if !defined(_T)
-#define _T(x) x
-#endif // not defined _T
+  #if !defined(_T)
+    #define _T(x) x
+  #endif // not defined _T
 #endif
 
-typedef int mecBool_t; // boolean type
-typedef int mecInt_t; // integer type
-typedef float mecFloat_t; // floating point type
+typedef int    mecBool_t;            // boolean type
+typedef int    mecInt_t;             // integer type 
+typedef float  mecFloat_t;           // floating point type
 
 // function types for calculation
-typedef mecFloat_t (*mecFun0_t)();
-typedef mecFloat_t (*mecFun1_t)(mecFloat_t);
-typedef mecFloat_t (*mecFun2_t)(mecFloat_t, mecFloat_t);
-typedef mecFloat_t (*mecFun3_t)(mecFloat_t, mecFloat_t, mecFloat_t);
-typedef mecFloat_t (*mecFun4_t)(mecFloat_t, mecFloat_t, mecFloat_t, mecFloat_t);
-typedef mecFloat_t (*mecFun5_t)(mecFloat_t, mecFloat_t, mecFloat_t, mecFloat_t,
-				mecFloat_t);
-typedef mecFloat_t (*mecFun6_t)(mecFloat_t, mecFloat_t, mecFloat_t, mecFloat_t,
-				mecFloat_t, mecFloat_t);
-typedef mecFloat_t (*mecFun7_t)(mecFloat_t, mecFloat_t, mecFloat_t, mecFloat_t,
-				mecFloat_t, mecFloat_t, mecFloat_t);
-typedef mecFloat_t (*mecFun8_t)(mecFloat_t, mecFloat_t, mecFloat_t, mecFloat_t,
-				mecFloat_t, mecFloat_t, mecFloat_t, mecFloat_t);
-typedef mecFloat_t (*mecFun9_t)(mecFloat_t, mecFloat_t, mecFloat_t, mecFloat_t,
-				mecFloat_t, mecFloat_t, mecFloat_t, mecFloat_t,
-				mecFloat_t);
-typedef mecFloat_t (*mecFun10_t)(mecFloat_t, mecFloat_t, mecFloat_t, mecFloat_t,
-				 mecFloat_t, mecFloat_t, mecFloat_t, mecFloat_t,
-				 mecFloat_t, mecFloat_t);
+typedef mecFloat_t (*mecFun0_t)(); 
+typedef mecFloat_t (*mecFun1_t)(mecFloat_t); 
+typedef mecFloat_t (*mecFun2_t)(mecFloat_t, mecFloat_t); 
+typedef mecFloat_t (*mecFun3_t)(mecFloat_t, mecFloat_t, mecFloat_t); 
+typedef mecFloat_t (*mecFun4_t)(mecFloat_t, mecFloat_t, mecFloat_t, mecFloat_t); 
+typedef mecFloat_t (*mecFun5_t)(mecFloat_t, mecFloat_t, mecFloat_t, mecFloat_t, mecFloat_t); 
+typedef mecFloat_t (*mecFun6_t)(mecFloat_t, mecFloat_t, mecFloat_t, mecFloat_t, mecFloat_t, mecFloat_t); 
+typedef mecFloat_t (*mecFun7_t)(mecFloat_t, mecFloat_t, mecFloat_t, mecFloat_t, mecFloat_t, mecFloat_t, mecFloat_t); 
+typedef mecFloat_t (*mecFun8_t)(mecFloat_t, mecFloat_t, mecFloat_t, mecFloat_t, mecFloat_t, mecFloat_t, mecFloat_t, mecFloat_t); 
+typedef mecFloat_t (*mecFun9_t)(mecFloat_t, mecFloat_t, mecFloat_t, mecFloat_t, mecFloat_t, mecFloat_t, mecFloat_t, mecFloat_t, mecFloat_t); 
+typedef mecFloat_t (*mecFun10_t)(mecFloat_t, mecFloat_t, mecFloat_t, mecFloat_t, mecFloat_t, mecFloat_t, mecFloat_t, mecFloat_t, mecFloat_t, mecFloat_t); 
 
 // Functions for parser management
-typedef void (*mecErrorHandler_t)(
-	mecParserHandle_t a_hParser); // [optional] callback to an error handler
-typedef mecFloat_t (*mecEvalFun_t)();
-typedef mecFloat_t *(*mecFacFun_t)(
-	const mecChar_t *,
-	void *); // [optional] callback for creating new variables
-typedef mecInt_t (*mecIdentFun_t)(
-	const mecChar_t *, mecInt_t *,
-	mecFloat_t *); // [optional] value identification callbacks
+typedef void        (*mecErrorHandler_t)(mecParserHandle_t a_hParser);             // [optional] callback to an error handler
+typedef mecFloat_t  (*mecEvalFun_t)();
+typedef mecFloat_t* (*mecFacFun_t)(const mecChar_t*, void*);                // [optional] callback for creating new variables
+typedef mecInt_t    (*mecIdentFun_t)(const mecChar_t*, mecInt_t*, mecFloat_t*); // [optional] value identification callbacks
+
 
 //-----------------------------------------------------------------------------------------------------
 // Constants
@@ -89,7 +91,7 @@ typedef mecInt_t (*mecIdentFun_t)(
 __declspec(dllexport) extern int mecOPRT_ASCT_LEFT;
 __declspec(dllexport) extern int mecOPRT_ASCT_RIGHT;
 
-// Error codes
+  // Error codes
 __declspec(dllexport) extern int mecUNEXPECTED_OPERATOR;
 __declspec(dllexport) extern int mecUNASSIGNABLE_TOKEN;
 __declspec(dllexport) extern int mecUNEXPECTED_EOF;
@@ -126,7 +128,7 @@ __declspec(dllexport) extern int mecUNDEFINED;
 __declspec(dllimport) extern int mecOPRT_ASCT_LEFT;
 __declspec(dllimport) extern int mecOPRT_ASCT_RIGHT;
 
-// Error codes
+  // Error codes
 __declspec(dllimport) extern int mecUNEXPECTED_OPERATOR;
 __declspec(dllimport) extern int mecUNASSIGNABLE_TOKEN;
 __declspec(dllimport) extern int mecUNEXPECTED_EOF;
@@ -168,112 +170,79 @@ __declspec(dllimport) extern int mecUNDEFINED;
 //
 //-----------------------------------------------------------------------------------------------------
 
-// Basic operations / initialization
+// Basic operations / initialization 
 API_EXPORT(void) mecDebugDump(int nDumpCmd, int nDumpStack);
 API_EXPORT(void) mecSelfTest();
 API_EXPORT(mecParserHandle_t) mecCreate();
 API_EXPORT(float) mecEval(mecParserHandle_t a_hParser);
 API_EXPORT(mecEvalFun_t) mecCompile(mecParserHandle_t a_hParser);
-API_EXPORT(mecEvalFun_t)
-mecDbgCompile(mecParserHandle_t a_hParser, int nRegNum);
+API_EXPORT(mecEvalFun_t) mecDbgCompile(mecParserHandle_t a_hParser, int nRegNum);
 API_EXPORT(void) mecRelease(mecParserHandle_t a_hParser);
-API_EXPORT(const mecChar_t *) mecGetExpr(mecParserHandle_t a_hParser);
-API_EXPORT(void)
-mecSetExpr(mecParserHandle_t a_hParser, const mecChar_t *a_szExpr);
-API_EXPORT(const mecChar_t *) mecGetVersion(mecParserHandle_t a_hParser);
+API_EXPORT(const mecChar_t*) mecGetExpr(mecParserHandle_t a_hParser);
+API_EXPORT(void) mecSetExpr(mecParserHandle_t a_hParser, const mecChar_t *a_szExpr);
+API_EXPORT(const mecChar_t*) mecGetVersion(mecParserHandle_t a_hParser);
 
 // Defining callbacks / variables / constants
-API_EXPORT(void)
-mecDefineFun0(mecParserHandle_t a_hParser, const mecChar_t *a_szName,
-	      mecFun0_t a_pFun, mecBool_t a_bOptimize);
-API_EXPORT(void)
-mecDefineFun1(mecParserHandle_t a_hParser, const mecChar_t *a_szName,
-	      mecFun1_t a_pFun, mecBool_t a_bOptimize);
-API_EXPORT(void)
-mecDefineFun2(mecParserHandle_t a_hParser, const mecChar_t *a_szName,
-	      mecFun2_t a_pFun, mecBool_t a_bOptimize);
-API_EXPORT(void)
-mecDefineFun3(mecParserHandle_t a_hParser, const mecChar_t *a_szName,
-	      mecFun3_t a_pFun, mecBool_t a_bOptimize);
-API_EXPORT(void)
-mecDefineFun4(mecParserHandle_t a_hParser, const mecChar_t *a_szName,
-	      mecFun4_t a_pFun, mecBool_t a_bOptimize);
-API_EXPORT(void)
-mecDefineFun5(mecParserHandle_t a_hParser, const mecChar_t *a_szName,
-	      mecFun5_t a_pFun, mecBool_t a_bOptimize);
-API_EXPORT(void)
-mecDefineFun6(mecParserHandle_t a_hParser, const mecChar_t *a_szName,
-	      mecFun5_t a_pFun, mecBool_t a_bOptimize);
-API_EXPORT(void)
-mecDefineFun7(mecParserHandle_t a_hParser, const mecChar_t *a_szName,
-	      mecFun5_t a_pFun, mecBool_t a_bOptimize);
-API_EXPORT(void)
-mecDefineFun8(mecParserHandle_t a_hParser, const mecChar_t *a_szName,
-	      mecFun5_t a_pFun, mecBool_t a_bOptimize);
-API_EXPORT(void)
-mecDefineFun9(mecParserHandle_t a_hParser, const mecChar_t *a_szName,
-	      mecFun5_t a_pFun, mecBool_t a_bOptimize);
-API_EXPORT(void)
-mecDefineFun10(mecParserHandle_t a_hParser, const mecChar_t *a_szName,
-	       mecFun5_t a_pFun, mecBool_t a_bOptimize);
+API_EXPORT(void) mecDefineFun0(mecParserHandle_t a_hParser, const mecChar_t *a_szName, mecFun0_t a_pFun, mecBool_t a_bOptimize);
+API_EXPORT(void) mecDefineFun1(mecParserHandle_t a_hParser, const mecChar_t *a_szName, mecFun1_t a_pFun, mecBool_t a_bOptimize);
+API_EXPORT(void) mecDefineFun2(mecParserHandle_t a_hParser, const mecChar_t *a_szName, mecFun2_t a_pFun, mecBool_t a_bOptimize);
+API_EXPORT(void) mecDefineFun3(mecParserHandle_t a_hParser, const mecChar_t *a_szName, mecFun3_t a_pFun, mecBool_t a_bOptimize);
+API_EXPORT(void) mecDefineFun4(mecParserHandle_t a_hParser, const mecChar_t *a_szName, mecFun4_t a_pFun, mecBool_t a_bOptimize);
+API_EXPORT(void) mecDefineFun5(mecParserHandle_t a_hParser, const mecChar_t *a_szName, mecFun5_t a_pFun, mecBool_t a_bOptimize);
+API_EXPORT(void) mecDefineFun6(mecParserHandle_t a_hParser, const mecChar_t *a_szName, mecFun5_t a_pFun, mecBool_t a_bOptimize);
+API_EXPORT(void) mecDefineFun7(mecParserHandle_t a_hParser, const mecChar_t *a_szName, mecFun5_t a_pFun, mecBool_t a_bOptimize);
+API_EXPORT(void) mecDefineFun8(mecParserHandle_t a_hParser, const mecChar_t *a_szName, mecFun5_t a_pFun, mecBool_t a_bOptimize);
+API_EXPORT(void) mecDefineFun9(mecParserHandle_t a_hParser, const mecChar_t *a_szName, mecFun5_t a_pFun, mecBool_t a_bOptimize);
+API_EXPORT(void) mecDefineFun10(mecParserHandle_t a_hParser, const mecChar_t *a_szName, mecFun5_t a_pFun, mecBool_t a_bOptimize);
 
-API_EXPORT(void)
-mecDefineOprt(mecParserHandle_t a_hParser, const mecChar_t *a_szName,
-	      mecFun2_t a_pFun, mecInt_t a_nPrec, mecInt_t a_nOprtAsct,
-	      mecBool_t a_bOptimize);
+API_EXPORT(void) mecDefineOprt( mecParserHandle_t a_hParser, 
+                                const mecChar_t* a_szName, 
+                                mecFun2_t a_pFun, 
+                                mecInt_t a_nPrec, 
+                                mecInt_t a_nOprtAsct,
+                                mecBool_t a_bOptimize);
 
-API_EXPORT(void)
-mecDefineConst(mecParserHandle_t a_hParser, const mecChar_t *a_szName,
-	       mecFloat_t a_fVal);
+API_EXPORT(void) mecDefineConst( mecParserHandle_t a_hParser, 
+                                 const mecChar_t* a_szName, 
+                                 mecFloat_t a_fVal );
 
-API_EXPORT(void)
-mecDefineVar(mecParserHandle_t a_hParser, const mecChar_t *a_szName,
-	     mecFloat_t *a_fVar);
+API_EXPORT(void) mecDefineVar( mecParserHandle_t a_hParser, 
+                               const mecChar_t* a_szName, 
+                               mecFloat_t *a_fVar);
 
-API_EXPORT(void)
-mecDefinePostfixOprt(mecParserHandle_t a_hParser, const mecChar_t *a_szName,
-		     mecFun1_t a_pOprt, mecBool_t a_bOptimize);
+API_EXPORT(void) mecDefinePostfixOprt( mecParserHandle_t a_hParser, 
+                                       const mecChar_t* a_szName, 
+                                       mecFun1_t a_pOprt, 
+                                       mecBool_t a_bOptimize);
 
-API_EXPORT(void)
-mecDefineInfixOprt(mecParserHandle_t a_hParser, const mecChar_t *a_szName,
-		   mecFun1_t a_pOprt, mecBool_t a_bOptimize);
+
+API_EXPORT(void) mecDefineInfixOprt( mecParserHandle_t a_hParser, 
+                                     const mecChar_t* a_szName, 
+                                     mecFun1_t a_pOprt, 
+                                     mecBool_t a_bOptimize);
 
 // Define character sets for identifiers
-API_EXPORT(void)
-mecDefineNameChars(mecParserHandle_t a_hParser, const mecChar_t *a_szCharset);
-API_EXPORT(void)
-mecDefineOprtChars(mecParserHandle_t a_hParser, const mecChar_t *a_szCharset);
-API_EXPORT(void)
-mecDefineInfixOprtChars(mecParserHandle_t a_hParser,
-			const mecChar_t *a_szCharset);
+API_EXPORT(void) mecDefineNameChars(mecParserHandle_t a_hParser, const mecChar_t* a_szCharset);
+API_EXPORT(void) mecDefineOprtChars(mecParserHandle_t a_hParser, const mecChar_t* a_szCharset);
+API_EXPORT(void) mecDefineInfixOprtChars(mecParserHandle_t a_hParser, const mecChar_t* a_szCharset);
 
 // Remove all / single variables
-API_EXPORT(void)
-mecRemoveVar(mecParserHandle_t a_hParser, const mecChar_t *a_szName);
+API_EXPORT(void) mecRemoveVar(mecParserHandle_t a_hParser, const mecChar_t* a_szName);
 API_EXPORT(void) mecClearVar(mecParserHandle_t a_hParser);
 API_EXPORT(void) mecClearConst(mecParserHandle_t a_hParser);
 API_EXPORT(void) mecClearOprt(mecParserHandle_t a_hParser);
 API_EXPORT(void) mecClearFun(mecParserHandle_t a_hParser);
 
 // Querying variables / expression variables / constants
-API_EXPORT(int) mecGetExprVarNum(mecParserHandle_t a_hParser);
-API_EXPORT(int) mecGetVarNum(mecParserHandle_t a_hParser);
-API_EXPORT(int) mecGetConstNum(mecParserHandle_t a_hParser);
-API_EXPORT(void)
-mecGetExprVar(mecParserHandle_t a_hParser, unsigned a_iVar,
-	      const mecChar_t **a_pszName, mecFloat_t **a_pVar);
-API_EXPORT(void)
-mecGetVar(mecParserHandle_t a_hParser, unsigned a_iVar,
-	  const mecChar_t **a_pszName, mecFloat_t **a_pVar);
-API_EXPORT(void)
-mecGetConst(mecParserHandle_t a_hParser, unsigned a_iVar,
-	    const mecChar_t **a_pszName, mecFloat_t *a_pVar);
-API_EXPORT(void)
-mecSetArgSep(mecParserHandle_t a_hParser, const mecChar_t cArgSep);
-API_EXPORT(void)
-mecSetDecSep(mecParserHandle_t a_hParser, const mecChar_t cArgSep);
-API_EXPORT(void)
-mecSetThousandsSep(mecParserHandle_t a_hParser, const mecChar_t cArgSep);
+API_EXPORT(int)  mecGetExprVarNum(mecParserHandle_t a_hParser);
+API_EXPORT(int)  mecGetVarNum(mecParserHandle_t a_hParser);
+API_EXPORT(int)  mecGetConstNum(mecParserHandle_t a_hParser);
+API_EXPORT(void) mecGetExprVar(mecParserHandle_t a_hParser, unsigned a_iVar, const mecChar_t** a_pszName, mecFloat_t** a_pVar);
+API_EXPORT(void) mecGetVar(mecParserHandle_t a_hParser, unsigned a_iVar, const mecChar_t** a_pszName, mecFloat_t** a_pVar);
+API_EXPORT(void) mecGetConst(mecParserHandle_t a_hParser, unsigned a_iVar, const mecChar_t** a_pszName, mecFloat_t* a_pVar);
+API_EXPORT(void) mecSetArgSep(mecParserHandle_t a_hParser, const mecChar_t cArgSep);
+API_EXPORT(void) mecSetDecSep(mecParserHandle_t a_hParser, const mecChar_t cArgSep);
+API_EXPORT(void) mecSetThousandsSep(mecParserHandle_t a_hParser, const mecChar_t cArgSep);
 API_EXPORT(void) mecResetLocale(mecParserHandle_t a_hParser);
 
 // Add value recognition callbacks
@@ -282,16 +251,20 @@ API_EXPORT(void) mecAddValIdent(mecParserHandle_t a_hParser, mecIdentFun_t);
 // Error handling
 API_EXPORT(mecBool_t) mecError(mecParserHandle_t a_hParser);
 API_EXPORT(void) mecErrorReset(mecParserHandle_t a_hParser);
-API_EXPORT(void)
-mecSetErrorHandler(mecParserHandle_t a_hParser,
-		   mecErrorHandler_t a_pErrHandler);
-API_EXPORT(const mecChar_t *) mecGetErrorMsg(mecParserHandle_t a_hParser);
+API_EXPORT(void) mecSetErrorHandler(mecParserHandle_t a_hParser, mecErrorHandler_t a_pErrHandler);
+API_EXPORT(const mecChar_t*) mecGetErrorMsg(mecParserHandle_t a_hParser);
 API_EXPORT(mecInt_t) mecGetErrorCode(mecParserHandle_t a_hParser);
 API_EXPORT(mecInt_t) mecGetErrorPos(mecParserHandle_t a_hParser);
-API_EXPORT(const mecChar_t *) mecGetErrorToken(mecParserHandle_t a_hParser);
+API_EXPORT(const mecChar_t*) mecGetErrorToken(mecParserHandle_t a_hParser);
 //API_EXPORT(const mecChar_t*) mecGetErrorExpr(mecParserHandle_t a_hParser);
 
 // This is used for .NET only. It creates a new variable allowing the dll to
 // manage the variable rather than the .NET garbage collector.
-API_EXPORT(mecFloat_t *) mecCreateVar();
-API_EXPORT(void) mecReleaseVar(mecFloat_t *);
+API_EXPORT(mecFloat_t*) mecCreateVar();
+API_EXPORT(void) mecReleaseVar(mecFloat_t*);
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif // include guard
