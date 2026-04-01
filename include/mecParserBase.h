@@ -37,10 +37,10 @@
 #undef realloc
 
 //--- ASMJit compiler---------------------------------------------------------------------
-#include "AsmJit/Assembler.h"
-#include "AsmJit/Compiler.h"
-#include "AsmJit/MemoryManager.h"
-#include "AsmJit/Logger.h"
+#include "Assembler.h"
+#include "Compiler.h"
+#include "MemoryManager.h"
+#include "Logger.h"
 
 //--- Parser includes --------------------------------------------------------------------------
 #include "mecDef.h"
@@ -49,7 +49,6 @@
 #include "mecReversePolishNotation.h"
 #include "mecError.h"
 #include "mecExprCompiler.h"
-
 
 namespace mec
 {
@@ -69,42 +68,39 @@ namespace mec
   user defined functions and variables. 
 
 */
-class ParserBase 
-{
-friend class TokenReader;
+class ParserBase {
+	friend class TokenReader;
 
-private:
-
-    /** \brief Typedef for the parse functions. 
+    private:
+	/** \brief Typedef for the parse functions. 
     
       The parse function do the actual work. The parser exchanges
       the function pointer to the parser function depending on 
       which state it is in. (i.e. bytecode parser vs. string parser)
     */
-    typedef value_type (ParserBase::*ParseFunction)();  
+	typedef value_type (ParserBase::*ParseFunction)();
 
-    /** \brief Type used for storing an array of values. */
-    typedef std::vector<value_type> valbuf_type;
+	/** \brief Type used for storing an array of values. */
+	typedef std::vector<value_type> valbuf_type;
 
-    /** \brief Typedef for the token reader. */
-    typedef TokenReader token_reader_type;
-    
- public:
+	/** \brief Typedef for the token reader. */
+	typedef TokenReader token_reader_type;
 
-    /** \brief Type of the error class. 
+    public:
+	/** \brief Type of the error class. 
     
       Included for backwards compatibility.
     */
-    typedef ParserError exception_type;
+	typedef ParserError exception_type;
 
-    ParserBase(); 
-    ParserBase(const ParserBase &a_Parser);
-    ParserBase& operator=(const ParserBase &a_Parser);
+	ParserBase();
+	ParserBase(const ParserBase &a_Parser);
+	ParserBase &operator=(const ParserBase &a_Parser);
 
-    virtual ~ParserBase();
-    
-    //---------------------------------------------------------------------------
-    /** \brief Calculate the result.
+	virtual ~ParserBase();
+
+	//---------------------------------------------------------------------------
+	/** \brief Calculate the result.
 
       A note on const correctness: 
       I consider it important that Calc is a const function.
@@ -119,178 +115,173 @@ private:
       \return The evaluation result
       \throw ParseException if no Formula is set or in case of any other error related to the formula.
     */
-	  inline value_type Eval() 
-    {
-      return (this->*m_pParseFormula)(); 
-    }
-	  
-    value_type (*Compile(int nHighestReg))();
+	inline value_type Eval()
+	{
+		return (this->*m_pParseFormula)();
+	}
 
-    void AsciiDump();
-    void SetExpr(const string_type &a_sExpr);
-    void SetVarFactory(facfun_type a_pFactory, void *pUserData = NULL);
-    void SetParserEngine(EParserEngine eEngine);
-    void AddValIdent(identfun_type a_pCallback);
+	value_type (*Compile(int nHighestReg))();
 
-/** \fn void mu::ParserBase::DefineFun(const string_type &a_strName, fun_type0 a_pFun) 
+	void AsciiDump();
+	void SetExpr(const string_type &a_sExpr);
+	void SetVarFactory(facfun_type a_pFactory, void *pUserData = NULL);
+	void SetParserEngine(EParserEngine eEngine);
+	void AddValIdent(identfun_type a_pCallback);
+
+	/** \fn void mu::ParserBase::DefineFun(const string_type &a_strName, fun_type0 a_pFun) 
     \brief Define a parser function without arguments.
     \param a_strName Name of the function
     \param a_pFun Pointer to the callback function
 */
 
-#define MEC_DEFINE_FUNC(TYPE)                                        \
-    void DefineFun(const string_type &a_strName, TYPE a_pFun, int flags = 0) \
-    {                                                                \
-      AddCallback( a_strName,                                        \
-                   Callback(a_pFun),                                 \
-                   m_FunDef,                                         \
-                   ValidNameChars() );                               \
-    }
+#define MEC_DEFINE_FUNC(TYPE)                                      \
+	void DefineFun(const string_type &a_strName, TYPE a_pFun,  \
+		       int flags = 0)                              \
+	{                                                          \
+		AddCallback(a_strName, Callback(a_pFun), m_FunDef, \
+			    ValidNameChars());                     \
+	}
 
-    MEC_DEFINE_FUNC(fun_type0)
-    MEC_DEFINE_FUNC(fun_type1)
-    MEC_DEFINE_FUNC(fun_type2)
-    MEC_DEFINE_FUNC(fun_type3)
-    MEC_DEFINE_FUNC(fun_type4)
-    MEC_DEFINE_FUNC(fun_type5)
-    MEC_DEFINE_FUNC(fun_type6)
-    MEC_DEFINE_FUNC(fun_type7)
-    MEC_DEFINE_FUNC(fun_type8)
-    MEC_DEFINE_FUNC(fun_type9)
-    MEC_DEFINE_FUNC(fun_type10)
+	MEC_DEFINE_FUNC(fun_type0)
+	MEC_DEFINE_FUNC(fun_type1)
+	MEC_DEFINE_FUNC(fun_type2)
+	MEC_DEFINE_FUNC(fun_type3)
+	MEC_DEFINE_FUNC(fun_type4)
+	MEC_DEFINE_FUNC(fun_type5)
+	MEC_DEFINE_FUNC(fun_type6)
+	MEC_DEFINE_FUNC(fun_type7)
+	MEC_DEFINE_FUNC(fun_type8)
+	MEC_DEFINE_FUNC(fun_type9)
+	MEC_DEFINE_FUNC(fun_type10)
 #undef MEC_DEFINE_FUNC
 
-    void DefineOprt(const string_type &a_strName, 
-                    fun_type2 a_pFun, 
-                    unsigned a_iPri=0, 
-                    EOprtAssociativity eAsc = oaLEFT, 
-                    int flags = 0);
-    void DefineConst(const string_type &a_sName, value_type a_fVal);
-    void DefineVar(const string_type &a_sName, value_type *a_fVar);
-    void DefinePostfixOprt(const string_type &a_strFun, fun_type1 a_pOprt, int flags = 0);
-    void DefineInfixOprt(const string_type &a_strName, fun_type1 a_pOprt, int a_iPrec=prINFIX);
+	void DefineOprt(const string_type &a_strName, fun_type2 a_pFun,
+			unsigned a_iPri = 0, EOprtAssociativity eAsc = oaLEFT,
+			int flags = 0);
+	void DefineConst(const string_type &a_sName, value_type a_fVal);
+	void DefineVar(const string_type &a_sName, value_type *a_fVar);
+	void DefinePostfixOprt(const string_type &a_strFun, fun_type1 a_pOprt,
+			       int flags = 0);
+	void DefineInfixOprt(const string_type &a_strName, fun_type1 a_pOprt,
+			     int a_iPrec = prINFIX);
 
-    // Clear user defined variables, constants or functions
-    void ClearVar();
-    void ClearFun();
-    void ClearConst();
-    void ClearInfixOprt();
-    void ClearPostfixOprt();
-    void ClearOprt();
-    
-    void RemoveVar(const string_type &a_strVarName);
-    const varmap_type& GetUsedVar();
-    const varmap_type& GetVar() const;
-    const valmap_type& GetConst() const;
-    const string_type& GetExpr() const;
-    const funmap_type& GetFunDef() const;
-    string_type GetVersion() const;
+	// Clear user defined variables, constants or functions
+	void ClearVar();
+	void ClearFun();
+	void ClearConst();
+	void ClearInfixOprt();
+	void ClearPostfixOprt();
+	void ClearOprt();
 
-    const char_type ** GetOprtDef() const;
-    void DefineNameChars(const char_type *a_szCharset);
-    void DefineOprtChars(const char_type *a_szCharset);
-    void DefineInfixOprtChars(const char_type *a_szCharset);
-    
-    void EnableOptimizer(bool a_bIsOn);
-    const char_type* ValidNameChars() const;
-    const char_type* ValidOprtChars() const;
-    const char_type* ValidInfixOprtChars() const;
+	void RemoveVar(const string_type &a_strVarName);
+	const varmap_type &GetUsedVar();
+	const varmap_type &GetVar() const;
+	const valmap_type &GetConst() const;
+	const string_type &GetExpr() const;
+	const funmap_type &GetFunDef() const;
+	string_type GetVersion() const;
 
-    void SetArgSep(char_type cArgSep);
-    char_type GetArgSep() const;
-    
-    void  Error(EErrorCodes a_iErrc, 
-                int a_iPos = (int)string_type::npos, 
-                const string_type &a_strTok = string_type() ) const;
+	const char_type **GetOprtDef() const;
+	void DefineNameChars(const char_type *a_szCharset);
+	void DefineOprtChars(const char_type *a_szCharset);
+	void DefineInfixOprtChars(const char_type *a_szCharset);
 
- protected:
-	  
-    void Init();
+	void EnableOptimizer(bool a_bIsOn);
+	const char_type *ValidNameChars() const;
+	const char_type *ValidOprtChars() const;
+	const char_type *ValidInfixOprtChars() const;
 
-    virtual void InitCharSets() = 0;
-    virtual void InitFun() = 0;
-    virtual void InitConst() = 0;
-    virtual void InitOprt() = 0; 
+	void SetArgSep(char_type cArgSep);
+	char_type GetArgSep() const;
 
-    static const char_type *c_DefaultOprt[]; 
+	void Error(EErrorCodes a_iErrc, int a_iPos = (int)string_type::npos,
+		   const string_type &a_strTok = string_type()) const;
 
- private:
+    protected:
+	void Init();
 
-    void Assign(const ParserBase &a_Parser);
-    void InitTokenReader();
-    void ReInit();
+	virtual void InitCharSets() = 0;
+	virtual void InitFun() = 0;
+	virtual void InitConst() = 0;
+	virtual void InitOprt() = 0;
 
-    void AddCallback( const string_type &a_strName, 
-                      const Callback &a_Callback, 
-                      funmap_type &a_Storage,
-                      const char_type *a_szCharSet );
+	static const char_type *c_DefaultOprt[];
 
-    void ApplyRemainingOprt(Stack<Token> &a_stOpt,
-                            Stack<Token> &a_stVal);
+    private:
+	void Assign(const ParserBase &a_Parser);
+	void InitTokenReader();
+	void ReInit();
 
-    void ApplyBinOprt(Stack<Token> &a_stOpt,
-                      Stack<Token> &a_stVal);
+	void AddCallback(const string_type &a_strName,
+			 const Callback &a_Callback, funmap_type &a_Storage,
+			 const char_type *a_szCharSet);
 
-    void ApplyIfElse(Stack<Token> &a_stOpt,
-                     Stack<Token> &a_stVal);
+	void ApplyRemainingOprt(Stack<Token> &a_stOpt, Stack<Token> &a_stVal);
 
-    void ApplyFunc(Stack<Token> &a_stOpt,
-                   Stack<Token> &a_stVal, 
-                   int iArgCount); 
+	void ApplyBinOprt(Stack<Token> &a_stOpt, Stack<Token> &a_stVal);
 
-    Token ApplyNumFunc(const Token &a_FunTok,
-                       const std::vector<Token> &a_vArg);
+	void ApplyIfElse(Stack<Token> &a_stOpt, Stack<Token> &a_stVal);
 
-    int GetOprtPrecedence(const Token &a_Tok) const;
-    EOprtAssociativity GetOprtAssociativity(const Token &a_Tok) const;
+	void ApplyFunc(Stack<Token> &a_stOpt, Stack<Token> &a_stVal,
+		       int iArgCount);
 
-    value_type ParseString(); 
-    value_type ParseCmdCode();
-    value_type ParseJIT();
+	Token ApplyNumFunc(const Token &a_FunTok,
+			   const std::vector<Token> &a_vArg);
+
+	int GetOprtPrecedence(const Token &a_Tok) const;
+	EOprtAssociativity GetOprtAssociativity(const Token &a_Tok) const;
+
+	value_type ParseString();
+	value_type ParseCmdCode();
+	value_type ParseJIT();
 
 #if !defined(NO_MICROSOFT_STYLE_INLINE_ASSEMBLY)
-    value_type ParseCmdCodeASM();
+	value_type ParseCmdCodeASM();
 #endif
 
-    void SwitchEngine();
+	void SwitchEngine();
 
-    void  ClearFormula();
-    void  CheckName(const string_type &a_strName, const string_type &a_CharSet) const;
+	void ClearFormula();
+	void CheckName(const string_type &a_strName,
+		       const string_type &a_CharSet) const;
 
-    void StackDump(const Stack<Token> &a_stVal, 
-                   const Stack<Token> &a_stOprt) const;
+	void StackDump(const Stack<Token> &a_stVal,
+		       const Stack<Token> &a_stOprt) const;
 
-    /** \brief Pointer to the parser function. 
+	/** \brief Pointer to the parser function. 
     
       Eval() calls the function whose address is stored there.
     */
-    ParseFunction  m_pParseFormula;
-    value_type (*m_pCompiledFun)();
-    valbuf_type m_vStackBuffer; ///< This is merely a buffer used for the stack in the cmd parsing routine
-    value_type *m_pStackZero;
-    ReversePolishNotation m_vByteCode;   ///< The Bytecode class.
+	ParseFunction m_pParseFormula;
+	value_type (*m_pCompiledFun)();
+	valbuf_type
+		m_vStackBuffer; ///< This is merely a buffer used for the stack in the cmd parsing routine
+	value_type *m_pStackZero;
+	ReversePolishNotation m_vByteCode; ///< The Bytecode class.
 
-    std::auto_ptr<token_reader_type> m_pTokenReader; ///< Managed pointer to the token reader object.
+	std::auto_ptr<token_reader_type>
+		m_pTokenReader; ///< Managed pointer to the token reader object.
 
-    funmap_type  m_FunDef;         ///< Map of function names and pointers.
-    funmap_type  m_PostOprtDef;    ///< Postfix operator callbacks
-    funmap_type  m_InfixOprtDef;   ///< unary infix operator.
-    funmap_type  m_OprtDef;        ///< Binary operator callbacks
-    valmap_type  m_ConstDef;       ///< user constants.
-    strmap_type  m_StrVarDef;      ///< user defined string constants
-    varmap_type  m_VarDef;         ///< user defind variables.
+	funmap_type m_FunDef; ///< Map of function names and pointers.
+	funmap_type m_PostOprtDef; ///< Postfix operator callbacks
+	funmap_type m_InfixOprtDef; ///< unary infix operator.
+	funmap_type m_OprtDef; ///< Binary operator callbacks
+	valmap_type m_ConstDef; ///< user constants.
+	strmap_type m_StrVarDef; ///< user defined string constants
+	varmap_type m_VarDef; ///< user defind variables.
 
-    bool m_bOptimize;              ///< Flag that indicates if the optimizer is on or off.
+	bool m_bOptimize; ///< Flag that indicates if the optimizer is on or off.
 
-    EParserEngine m_eEngine;       ///< Specifies the parser engine to be used for the parsing
-    string_type m_sNameChars;      ///< Charset for names
-    string_type m_sOprtChars;      ///< Charset for postfix/ binary operator tokens
-    string_type m_sInfixOprtChars; ///< Charset for infix operator tokens
-    mutable int m_nIfElseCounter;  ///< Internal counter for keeping track of nested if-then-else clauses
-    ExprCompiler m_compiler;
+	EParserEngine
+		m_eEngine; ///< Specifies the parser engine to be used for the parsing
+	string_type m_sNameChars; ///< Charset for names
+	string_type m_sOprtChars; ///< Charset for postfix/ binary operator tokens
+	string_type m_sInfixOprtChars; ///< Charset for infix operator tokens
+	mutable int
+		m_nIfElseCounter; ///< Internal counter for keeping track of nested if-then-else clauses
+	ExprCompiler m_compiler;
 };
 
 } // namespace mec
 
 #endif
-
